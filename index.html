@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lobster&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #ff4d6d;
+      --secondary-color: #ffb6c1;
+      --background-light: #ffe6f2;
+      --text-light: #ff4d6d;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(to bottom, #ffe6f2, #ffb6c1);
+      background-attachment: fixed; /* Ensures gradient covers the entire page */
+      color: var(--text-light);
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ff4d6d" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'), auto; /* Custom heart cursor */
+      margin: 0; /* Remove default margin */
+      height: 100vh; /* Ensure gradient covers full viewport height */
+    }
+
+    h1 {
+      font-family: 'Lobster', cursive;
+      font-size: 3.5em;
+      color: var(--primary-color);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.8s forwards 0.3s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      margin-top: 20px;
+    }
+
+    .active {
+      display: block;
+      opacity: 1;
+    }
+
+    .menu-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      cursor: pointer;
+      border-radius: 12px;
+      z-index: 100;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    .menu-button:hover {
+      background-color: #ff99aa;
+      transform: scale(1.05);
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: var(--secondary-color);
+      padding: 20px;
+      transition: left 0.4s ease;
+      z-index: 99;
+      border-top-right-radius: 20px;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu.open {
+      left: 0;
+    }
+
+    .menu a {
+      display: block;
+      padding: 14px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu a:hover {
+      background-color: #ff99aa;
+    }
+
+    .heart-particle {
+      position: fixed;
+      font-size: 24px;
+      opacity: 0.7;
+      animation: float 4s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(-150px) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-300px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    /* Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 0.9em;
+    }
+
+    /* Loading Animation */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--background-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loader-heart {
+      font-size: 4em;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Audio Controls */
+    .audio-controls {
+      margin-top: 20px;
+    }
+
+    .audio-controls button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .audio-controls button:hover {
+      background-color: #ff99aa;
+    }
+
+    /* Volume Slider */
+    .volume-slider {
+      width: 80%;
+      max-width: 200px;
+      margin: 10px auto;
+      appearance: none;
+      height: 8px;
+      background: var(--secondary-color);
+      outline: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      border-radius: 4px;
+    }
+
+    .volume-slider:hover {
+      opacity: 1;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--primary-color);
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--primary-color);
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    /* Autoplay Prompt */
+    #autoplay-prompt {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+    }
+
+    #autoplay-prompt p {
+      margin: 0;
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+
+    /* Scrollable Poem Section */
+    #poem {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* News Section Adjustments */
+    #news {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* Custom Scrollbar */
+    #poem::-webkit-scrollbar,
+    #news::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    #poem::-webkit-scrollbar-track,
+    #news::-webkit-scrollbar-track {
+      background: var(--secondary-color);
+      border-radius: 10px;
+    }
+
+    #poem::-webkit-scrollbar-thumb,
+    #news::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+      border: 2px solid var(--secondary-color);
+    }
+
+    #poem::-webkit-scrollbar-thumb:hover,
+    #news::-webkit-scrollbar-thumb:hover {
+      background: #ff99aa;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Animation -->
+  <div id="loader">
+    <div class="loader-heart">❤️</div>
+  </div>
+
+  <!-- Autoplay Prompt -->
+  <div id="autoplay-prompt">
+    <p>Click anywhere to play the music (volume warning btw) 🎵</p>
+  </div>
+
+  <button class="menu-button" onclick="toggleMenu()">☰</button>
+  <div class="menu" id="menu">
+    <a href="#" onclick="showTab('intro'); toggleMenu();">Introduction</a>
+    <a href="#" onclick="showTab('poem'); toggleMenu();">Poem</a>
+    <a href="#" onclick="showTab('news'); toggleMenu();">News</a>
+    <a href="#" onclick="showTab('audio'); toggleMenu();">Audio</a>
+  </div>
+
+  <div id="intro" class="content active">
+    <h1>Welcome, My Dear Elli ❤️</h1>
+      <p>Happy Birthday to the most amazing person in the world! 🎉</p>
+      <p> I hope you have a wonderful day filled with love, joy, and everything you deserve. 🎂</p>
+      <p> You are the most beautiful person I know, inside and out, and I am so grateful to have you in my life. 🌹</p>
+      <p> You bring so much happiness and love into my life, and I am so lucky to have you. 💖</p>
+      <p> I hope this day is as special as you are to me. 🎈</p>
+      <p>I made this little site just for you. I hope it makes you smile as much as you make me smile every day. ❤️</p>
+      <p> I love you more than words can express, and I can't wait to spend many more birthdays with you. 😘 </p>
+      <p> so happy birthday to you my sweet little cupcake , i love you to the moon and back 🥰 </p>
+  </div>
+
+  <div id="poem" class="content">
+    <h1>Happy Birthday, My Sweet Darling ❤️</h1>
+    <p>
+      she is the beauty in my life <br>
+      her smile is like a ray of sunshine <br>
+      the one who fills my heart with light <br>
+      her eyes are like the ocean <br>
+      when I look at her I see the stars <br>
+      when I see her she heals my scars <br><br>
+
+      she’s out of this world <br>
+      she’s on her own domain <br>
+      just a glimpse and my sorrows are hurled <br>
+      just a glimpse takes away all of my pain <br>
+      and if I were to live life a second time <br>
+      id repeat every mistake without a complaint <br>
+      every little mishap and second of misery <br>
+      if it meant id get to meet you all over again <br><br>
+
+      I want to forever be yours <br>
+      and so forever you’ll be mine <br>
+      I want the world to know that I’m thine <br>
+      I want them to notice how brightly you can shine <br><br>
+
+      oh, this girl and how enchanting she is <br>
+      oh, this girl her charm is just sublime <br><br>
+
+      the second her voice met my ears <br>
+      I knew in the game of life I just won <br>
+      the second I felt her loving warmth <br>
+      my mind was completely gone <br>
+      the mere second I saw her dazzling face <br>
+      I knew I’d stare at her from dusk till dawn <br><br>
+
+      oh, darling I hope you love the flowers <br>
+      with their different scents and chromas <br>
+      because with merely the thought of yours <br>
+      within me I get an entire field <br>
+      because Elli your love is just like a flower <br>
+      just a look from you and it blooms <br>
+      your love is like a lantern <br>
+      always lights up the darkness in my room <br><br>
+
+      your love has become my way of life <br>
+      the only way i will ever know <br>
+      your love is my way of life <br>
+      the only person i want is you <br>
+      your love will always be my way of life <br>
+      of you i am never letting go <br><br>
+
+      for you , my Elli . are the light of my life <br>
+      the reason for my smile <br>
+      the only one who makes me feel alive <br>
+      the only one that makes it all worth a while <br>
+      Ellie you’re the dreams of night <br>
+      the visions of my day <br>
+      you’re whom I want to hold so tight <br>
+      and never let go away. <br>
+      happy birthday to you my princess <br>
+      and for many more to come ❤
+    </p>
+  </div>
+
+  <div id="news" class="content">
+    <h1>News</h1>
+    <p>
+      I have some good news that I hope would make you happy my baby, and I thought I would leave it for a special day such as this one, </p>
+      <p> I have talked to some travel agencies and took their numbers for some further discussions about the visa and the papers around it, </p>
+        <p> and I’m currently formulating an email to send to the embassy to also ask about the visa and all the necessary documents and papers as </p>
+          <p>well as procedures that I have to take in order to be able to finally come to you, and hold you between my arms, </p>
+            <p> maybe today I missed your birthday physically, but the next one I will make sure it will be a birthday to be remembered, </p>
+              <p>so please, until then, until I come to you and get to take care of you myself, stay strong my tough little cookie, </p>
+                <p> things aren’t easy trust me I know, I know how much you struggle with everything and how much effort you put into all of the things that you do,</p>
+                  <p> and I’m proud of you for that, your actions are seen, your efforts are appreciated and acknowledged, and I couldn’t care less what the others may think,</p> 
+                    <p> because at the end of the day, I know my princess Elli and how much of a great person she is, and I will always and forever believe in her, </p>
+                      <p> through the tough moments of misery and pain, and through the moments of sheer joy and happiness, because my darling I am yours, </p>
+                        <p> and you are mine, and nothing will ever change that 💟
+    </p>
+  </div>
+
+  <!-- Audio Tab -->
+  <div id="audio" class="content">
+    <h1>Audio Controls</h1>
+    <div class="audio-controls">
+      <button onclick="playAudio()">Play Music</button>
+      <button onclick="pauseAudio()">Pause Music</button>
+      <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volume-slider" oninput="setVolume(this.value)">
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with L❤️ve by Feras</p>
+  </footer>
+
+  <!-- Background Music -->
+  <audio id="background-music" loop>
+    <source src="C:\Users\froxf\Downloads\Bruno Major - Nothing (Lyrics).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    // Toggle Menu
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('open');
+    }
+
+    // Show Tab
+    function showTab(tabId) {
+      document.querySelectorAll('.content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // Heart Particles
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-particle');
+      heart.innerText = '❤️';
+
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.top = window.innerHeight + 'px';
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    setInterval(createHeart, 300);
+
+    // Loading Animation
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+      }, 2000);
+    });
+
+    // Audio Controls
+    const audio = document.getElementById('background-music');
+    const volumeSlider = document.getElementById('volume-slider');
+
+    // Set initial volume to 50%
+    audio.volume = 0.20;
+    volumeSlider.value = 0.20;
+
+    function playAudio() {
+      audio.play();
+    }
+
+    function pauseAudio() {
+      audio.pause();
+    }
+
+    // Volume Control
+    function setVolume(volume) {
+      audio.volume = volume;
+    }
+    // Autoplay Attempt
+    document.addEventListener('click', () => {
+      const autoplayPrompt = document.getElementById('autoplay-prompt');
+      autoplayPrompt.style.display = 'none'; // Hide the prompt
+      audio.play().catch(() => {
+        autoplayPrompt.style.display = 'block'; // Show the prompt if autoplay fails
+      });
+    });
+
+    // Try to autoplay on page load
+    audio.play().catch(() => {
+      document.getElementById('autoplay-prompt').style.display = 'block'; // Show the prompt if autoplay fails
+    });
+  </script>
+</body>
+</html>
